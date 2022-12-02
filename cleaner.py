@@ -60,8 +60,8 @@ class CleanDS:
         print(f"There were originally {self.original_no_rows} rows. There are now {curr_no_rows}, a reduction of {round(percentage, 2)}%")   
         
     def make_sale_date_column_a_date(self):
-        #self.df_housing['SALE DATE'] = pd.to_datetime(self.df_housing['SALE DATE'], format('%Y-%m-%d'))
-        self.df_housing['SALE DATE'] = pd.to_datetime(self.df_housing['SALE DATE'])
+        self.df_housing['SALE DATE'] = pd.to_datetime(self.df_housing['SALE DATE'], format:('%Y-%m-%d'))
+        #self.df_housing['SALE DATE'] = pd.to_datetime(self.df_housing['SALE DATE'])
         
     def add_new_columns(self):
         borough_names = {1:'Manhattan',2:'Bronx',3:'Brooklyn',4:'Queens',5:'Staten Island'}
