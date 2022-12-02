@@ -1,6 +1,6 @@
 import pandas as pd
 
-# Every time this file is open the columns must be set to the correct datatype
+# Every time this file is opened the columns must be set to the correct datatype
 class OpenCleanFile:
     def __init__(self):
         file_path = "Files\\"
