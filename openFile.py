@@ -11,10 +11,11 @@ class OpenCleanFile:
         delete_columns = ['Unnamed: 0']
         self.df_housing.drop(delete_columns, axis=1, inplace=True)
         self.df_housing['SALE DATE'] = pd.to_datetime(self.df_housing['SALE DATE'])
-        col_names = ['NEIGHBORHOOD', 'BUILDING CLASS CATEGORY', 'TAX CLASS AT PRESENT', 'BLOCK',
+        self.alpha_names = [
+            'NEIGHBORHOOD', 'BUILDING CLASS CATEGORY', 'TAX CLASS AT PRESENT', 'Tax Block',
             'BUILDING CLASS AT TIME OF SALE', "BOROUGH_NAME", 'TAX CLASS AT TIME OF SALE']
 
-        for col_name in col_names:
+        for col_name in self.alpha_names:
             self.df_housing[col_name] = self.df_housing[col_name].astype('category')
 
         

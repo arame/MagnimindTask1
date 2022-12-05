@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from datetime import date
 
 class CleanDS:
     def __init__(self, df_housing):
@@ -15,6 +16,10 @@ class CleanDS:
         rows_deleted = self.no_rows_before_deletion - len(self.df_housing)
         percentage = (rows_deleted / self.original_no_rows) * 100
         return f"a reduction of {round(percentage, 2)}%"
+
+    def rename_columns(self, column_name_renames):
+        self.df_housing.rename(columns=column_name_renames, inplace=True)
+
         
     def convert_objects_to_integers(self, column_names_to_reformat):
         # convert the sales price column from text to a nullable integer
@@ -46,12 +51,17 @@ class CleanDS:
         self.no_rows_before_deletion = len(self.df_housing)
         self.df_housing = self.df_housing[self.df_housing['GROSS SQUARE FEET'] > self.df_housing['LAND SQUARE FEET']]
         self.print_rows_deleted(f"where the Land Square Feet is greater than the Gross Square Feet")
-        
+
     def remove_outliers(self, col_name, lower_limit, upper_limit):
         self.no_rows_before_deletion = len(self.df_housing)
         self.df_housing = self.df_housing[self.df_housing[col_name] > lower_limit]
         self.df_housing = self.df_housing[self.df_housing[col_name] < upper_limit]
         self.print_rows_deleted(f"for {col_name} that were outside the limits of {lower_limit} to {upper_limit}")
+    
+    def remove_outliers_greater_than(self, col_name, upper_limit):
+        self.no_rows_before_deletion = len(self.df_housing)
+        self.df_housing = self.df_housing[self.df_housing[col_name] < upper_limit]
+        self.print_rows_deleted(f"for {col_name} that were greater than {upper_limit}")
                 
     def summary_rows_removed(self):
         curr_no_rows = len(self.df_housing)
@@ -60,7 +70,7 @@ class CleanDS:
         print(f"There were originally {self.original_no_rows} rows. There are now {curr_no_rows}, a reduction of {round(percentage, 2)}%")   
         
     def make_sale_date_column_a_date(self):
-        self.df_housing['SALE DATE'] = pd.to_datetime(self.df_housing['SALE DATE'], format:('%Y-%m-%d'))
+        self.df_housing['SALE DATE'] = pd.to_datetime(self.df_housing['SALE DATE'], format=('%Y-%m-%d'))
         #self.df_housing['SALE DATE'] = pd.to_datetime(self.df_housing['SALE DATE'])
         
     def add_new_columns(self):
@@ -69,7 +79,10 @@ class CleanDS:
         self.df_housing.drop('BOROUGH', axis=1, inplace=True)
         self.df_housing['SALE_MONTH']= self.df_housing['SALE DATE'].dt.month
         #create a new column for age of the unit
-        self.df_housing['AGE'] = 2022 - self.df_housing['YEAR BUILT']
+        todays_date = date.today()
+        self.df_housing['AGE'] = todays_date.year - self.df_housing['YEAR BUILT']
+        #no longer need the YEAR BUILT column now that we have the age
+        self.df_housing.drop(['YEAR BUILT'], axis=1, inplace=True)
         
     def convert_data_type_to_categories(self, col_names):
         for col_name in col_names:
